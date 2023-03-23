@@ -62,20 +62,20 @@ const db = (0, firestore_1.getFirestore)(admin.apps[0]);
  * @return {boolean, string}
  */
 async function checkUsername(username, password, Admin) {
-    const users = db.collection('users').doc(username);
+    const users = db.collection("users").doc(username);
     const doc = await users.get();
     if (!doc.exists) {
-        let firebaseToken = await admin.auth().createCustomToken(username);
-        let newUser = db.collection('users');
+        const firebaseToken = await admin.auth().createCustomToken(username);
+        const newUser = db.collection("users");
         await newUser.doc(username).set({
             Password: password,
             IdToken: firebaseToken,
-            Admin: Admin
+            Admin: Admin,
         });
         return [true, firebaseToken];
     }
     else {
-        return [false, 'Failed'];
+        return [false, "Failed"];
     }
 }
 //# sourceMappingURL=auth.js.map
