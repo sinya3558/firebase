@@ -1,0 +1,41 @@
+/* async function checkUsername(username: string, password: string): Promise<[boolean, string]> {
+  const users = db.collection('users').doc(username);
+  const doc = await users.get();
+  if (!doc.exists) {
+    console.log('work');
+    let firebaseToken = await admin.auth().createCustomToken(username);
+    let newUser = db.collection('users')
+    await newUser.doc(username).set({
+      Password: password,
+      IdToken: firebaseToken
+    });
+    return [true, firebaseToken]
+  } else {
+    return [false, 'Failed']
+  }
+}*/
+
+async function checkUsername(username: string, password: string): Promise<boolean> {
+  const users = db.collection("users").doc(username);
+  const doc = await users.get();
+  console.log('work');
+  if (!doc.exists) {
+    // const firebaseToken = await admin.getAuth().createCustomToken(username);
+    const newUser = db.collection("users");
+    await newUser.doc(username).set({
+      Password: password,
+    });
+    return true;
+  } else {
+    return false;
+  }
+}
+
+  /*const valid = await checkUsername(username, password);
+      if (!valid) {
+        return handleResponse(username, 401, "Invalid username/password");
+      }
+      console.log('at least');
+      const firebaseToken = await admin.auth().createCustomToken(username);
+      
+      return handleResponse(username, 200, {IDtoken: firebaseToken});*/
