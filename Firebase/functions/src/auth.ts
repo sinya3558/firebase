@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
-const cors = require("cors")({origin: true});
 const admin = require("firebase-admin");
-admin.initializeApp();
+admin.initializeApp()
+const cors = require("cors")({origin: true});
 
 exports.auth = functions.https.onRequest((req: any, res: any) => {
   const handleError = (username: string, error: any) => {
@@ -88,3 +88,4 @@ async function checkUsername(username: string, password: string, Admin: string):
     return [false, "Failed"];
   }
 }
+

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
 const admin = require("firebase-admin");
 admin.initializeApp();
+const cors = require("cors")({ origin: true });
 exports.auth = functions.https.onRequest((req, res) => {
     const handleError = (username, error) => {
         functions.logger.error({ User: username }, error);
