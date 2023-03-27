@@ -1,63 +1,34 @@
-//const functions = require("firebase-admin");
 const functions = require("firebase-functions");
-const cors = require("cors")({origin: true});
-const admin = require("firebase-admin");
-var fs = require('fs');
-/**
- * Upload the file in firestore storage
- * @param {String} filePath 
- * @param {String} fileName 
- */
+import { getStorage, ref, uploadString } from "firebase/storage"; 
+import { initializeApp } from "firebase/app";
 
-//async function uploadLocalFileToStorage(filePath: string, fileName: string) {
-exports.upload= functions.https.onRequest((req: any, res: any) => {
-  const handleError = (filepath: string, error: any) => {
-    functions.logger.error({User: filepath}, error);
-    res.sendStatus(500);
-    return;
-  };
-
-  const handleResponse = (filename: string, status: number, body: any) => {
-    functions.logger.log(
-      {User: filename},
-      {
-        Response: {
-          Status: status,
-          Body: body,
-        },
-      }
-    );
-    if (body) {
-      return res.status(200).json(body);
-    }
-    return res.sendStatus(status);
-  };
-
-  const imageBucket = "images/";
-  
-  const bucket = admin.storage().bucket();
-  const destination = `${imageBucket}${req.body.fileName}`;
-
-  console.log(req.body.fileName);
-  console.log(req.body.filePath);
-  var stats = fs.statSync(req.body.filePath);
-  console.log('is directory ? ' + stats.isFile());
-
+exports.uploadFile = functions.https.onRequest(async (req: any, res: any) => {
   try {
-    return cors(req, res, async () => {
-      // Uploads a local file to the bucket
-      await bucket.upload(req.body.filePath, {
-          destination: destination,
-          gzip: true,
-          metadata: {
-              cacheControl: 'public, max-age=31536000',
-          },
-      });
+    const { data, metadata } = JSON.parse(JSON.stringify(req.body));
 
-      console.log(`${req.body.fileName} uploaded to /${imageBucket}/${req.body.fileName}.`);
-      return handleResponse(req.body.fileName, 200, `${req.body.fileName} uploaded to /${imageBucket}/${req.body.fileName}.`);
-    });
-  } catch (e) {
-      return handleError(req.body.filePath, e);
+    const file = data.Content;
+    console.log(metadata.Name);
+    console.log(file)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBv0YpZub_rr-nQ_fil5DhUjQGpPV9e6jQ",
+        authDomain: "rest-api-b6587.firebaseapp.com",
+        projectId: "rest-api-b6587",
+        storageBucket: "rest-api-b6587.appspot.com",
+        messagingSenderId: "276179708375",
+        appId: "1:276179708375:web:d18b52c6e02dcc03f84392",
+        measurementId: "G-13Y9JC2Y1S"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const storage = getStorage(firebaseApp);
+    const storageRef = ref(storage, 'package/');
+
+    await uploadString(storageRef, file, 'base64');
+    console.log('Uploaded a base64 file format');
+
+    res.status(200).send(metadata);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
   }
 });

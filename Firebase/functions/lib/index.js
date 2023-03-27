@@ -5,7 +5,7 @@ const upload = require("./upload");
 const auth = require("./auth");
 // auth function
 exports.auth = auth.auth;
-exports.upload = upload.upload;
+exports.upload = upload.uploadFile;
 /*app.listen(3005, () => {
   console.log(`Server is listening at port ${3005}`);
 })*/ 
