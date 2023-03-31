@@ -37,7 +37,7 @@ exports.uploadFile = functions.https.onRequest(async (req: any, res: any) => {
         Version: metadata.Version,
         ID: metadata.ID,
       });
-      console.log("The metadata is successfully saved.")
+      console.log("The metadata is successfully saved.");
     } else {
       console.log("The file name is already existed.");
     }
