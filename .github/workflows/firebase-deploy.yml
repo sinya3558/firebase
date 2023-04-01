@@ -2,13 +2,14 @@ name: Deploy Cloud Functions
 on:
   workflow_dispatch:
   push:
-    branches:
+    branches: 
       - main
     paths:
       - 'functions/**'
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -21,7 +22,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Build Cloud Functions
-        run: npm ci && npm run build
+        run: npm ci
         working-directory: functions
       - name: Create SA key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
