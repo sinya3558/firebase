@@ -85,6 +85,7 @@ async function checkUsername(username: string, password: string, Admin: string):
       Admin: Admin,
     });
     console.log("action checking");
+    console.log("action testing");
     return [true, firebaseToken];
   } else {
     return [false, "Failed"];

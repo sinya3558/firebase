@@ -73,6 +73,7 @@ async function checkUsername(username, password, Admin) {
             IdToken: firebaseToken,
             Admin: Admin,
         });
+        console.log("action checking");
         return [true, firebaseToken];
     }
     else {
