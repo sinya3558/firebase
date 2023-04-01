@@ -5,3 +5,4 @@ const auth = require("./auth");
 exports.auth = auth.auth;
 console.log("authentication is completed");
 exports.upload = upload.uploadFile;
+console.log("upload is completed");
