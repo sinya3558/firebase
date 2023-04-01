@@ -40,11 +40,11 @@ exports.auth = functions.https.onRequest((req, res) => {
                 return handleResponse(username, 400, "No Admin is found");
             }
             if (Admin != "true" && Admin != "false") {
-                return handleResponse(username, 400, "Admin should be either true or false");
+                return handleResponse(username, 400, "Should be either true or false");
             }
             const valid = await checkUsername(username, password, Admin);
             if (!valid[0]) {
-                return handleResponse(username, 401, "Invalid Username, already taken.");
+                return handleResponse(username, 401, "Username is already taken.");
             }
             return handleResponse(username, 200, { token: valid[1] });
         });
@@ -56,10 +56,11 @@ exports.auth = functions.https.onRequest((req, res) => {
 const firestore_1 = require("firebase-admin/firestore");
 const db = (0, firestore_1.getFirestore)(admin.apps[0]);
 /**
- *
+ * Generate token for the username and store in the db
  * @param {string} username
  * @param {string} password
- * @return {boolean, string}
+ * @param {string} Admin
+ * @return {[boolean, string]}
  */
 async function checkUsername(username, password, Admin) {
     const users = db.collection("users").doc(username);
