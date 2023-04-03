@@ -32,11 +32,13 @@ exports.uploadFile = functions.https.onRequest(async (req: Req, res: Res) => {
     console.log("Uploaded a base64 file");
     await updateMetadata(storageRef, metadata);
     console.log("Updated");
-    const packages = db.collection("packages").doc(metadata.Name);
-    const doc = await packages.get();
+    const packagesRef = db.collection("packages").doc(metadata.Name)
+      .collection("version").doc(metadata.version);
+    const doc = await packagesRef.get();
     if (!doc.exists) {
-      const newPackage = db.collection("packages");
-      await newPackage.doc(metadata.Name).set({
+      const newPackage = db.collection("packages").doc(metadata.Name)
+        .collection("version");
+      await newPackage.doc(metadata.version).set({
         Name: metadata.Name,
         Version: metadata.Version,
         ID: metadata.ID,
