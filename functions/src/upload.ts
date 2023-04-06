@@ -26,19 +26,17 @@ exports.uploadFile = functions.https.onRequest(async (req: Req, res: Res) => {
     const firebaseApp = initializeApp(firebaseConfig);
     const storage = getStorage(firebaseApp);
     const db = getFirestore(admin.apps[0]);
-    const storageRef = ref(storage, `package/${metadata.Name}`);
+    const storageRef = ref(storage, `package/${metadata.ID}`);
 
     await uploadString(storageRef, file, "base64");
     console.log("Uploaded a base64 file");
     await updateMetadata(storageRef, metadata);
     console.log("Updated");
-    const packagesRef = db.collection("packages").doc(metadata.Name)
-      .collection("version").doc(metadata.version);
+    const packagesRef = db.collection(metadata.Name).doc(metadata.Version);
     const doc = await packagesRef.get();
     if (!doc.exists) {
-      const newPackage = db.collection("packages").doc(metadata.Name)
-        .collection("version");
-      await newPackage.doc(metadata.version).set({
+      const newPackage = db.collection(metadata.Name);
+      await newPackage.doc(metadata.Version).set({
         Name: metadata.Name,
         Version: metadata.Version,
         ID: metadata.ID,
